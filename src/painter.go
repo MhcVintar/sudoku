@@ -18,30 +18,77 @@ func newPainter(board *board, cursor *cursor) *painter {
 
 func (p *painter) paintCursor() {
 	currentCell := termbox.GetCell(p.cursor.screenX, p.cursor.screenY)
-	termbox.SetCell(p.cursor.screenX, p.cursor.screenY, currentCell.Ch, termbox.ColorBlack, termbox.ColorWhite)
+
+	var digitStyle termbox.Attribute
+	if p.board.getCell(p.cursor.boardY, p.cursor.boardX).isGenerated {
+		digitStyle = termbox.ColorBlue | termbox.AttrBold
+	} else if !p.board.getCell(p.cursor.boardY, p.cursor.boardX).isValid {
+		digitStyle = termbox.ColorLightRed | termbox.AttrBold
+	} else {
+		digitStyle = termbox.ColorBlack
+	}
+
+	termbox.SetCell(p.cursor.screenX, p.cursor.screenY, currentCell.Ch, digitStyle, termbox.ColorWhite)
 }
 
 func (p *painter) paintBoard() {
-	boardLines := []string{
-		"┌─────────┬─────────┬─────────┐",
-		"│         │         │         │",
-		"│         │         │         │",
-		"│         │         │         │",
-		"├─────────┼─────────┼─────────┤",
-		"│         │         │         │",
-		"│         │         │         │",
-		"│         │         │         │",
-		"├─────────┼─────────┼─────────┤",
-		"│         │         │         │",
-		"│         │         │         │",
-		"│         │         │         │",
-		"└─────────┴─────────┴─────────┘",
+	boardBoldLines := []string{
+		"┌───────────┬───────────┬───────────┐",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"├───────────┼───────────┼───────────┤",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"├───────────┼───────────┼───────────┤",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"│           │           │           │",
+		"└───────────┴───────────┴───────────┘",
 	}
-
-	for y, line := range boardLines {
+	for y, line := range boardBoldLines {
 		x := 0
 		for _, character := range line {
-			termbox.SetCell(x, y, character, termbox.ColorDefault, termbox.ColorDefault)
+			termbox.SetCell(x, y, character, termbox.ColorLightBlue|termbox.AttrBold, termbox.ColorDefault)
+			x++
+		}
+	}
+
+	boardRegularLines := []string{
+		".....................................",
+		".   │   │   .   │   │   .   │   │   .",
+		".───┼───┼───.───│───│───.───│───│───.",
+		".   │   │   .   │   │   .   │   │   .",
+		".───┼───┼───.───┼───┼───.───┼───┼───.",
+		".   │   │   .   │   │   .   │   │   .",
+		".....................................",
+		".   │   │   .   │   │   .   │   │   .",
+		".───┼───┼───.───┼───┼───.───┼───┼───.",
+		".   │   │   .   │   │   .   │   │   .",
+		".───┼───┼───.───┼───┼───.───┼───┼───.",
+		".   │   │   .   │   │   .   │   │   .",
+		".....................................",
+		".   │   │   .   │   │   .   │   │   .",
+		".───┼───┼───.───┼───┼───.───┼───┼───.",
+		".   │   │   .   │   │   .   │   │   .",
+		".───┼───┼───.───┼───┼───.───┼───┼───.",
+		".   │   │   .   │   │   .   │   │   .",
+		".....................................",
+	}
+
+	for y, line := range boardRegularLines {
+		x := 0
+		for _, character := range line {
+			if character != '.' {
+				termbox.SetCell(x, y, character, termbox.ColorLightBlue, termbox.ColorDefault)
+			}
 			x++
 		}
 	}
@@ -64,26 +111,17 @@ func (p *painter) paintBoard() {
 			if isGenerated {
 				digitStyle = termbox.ColorLightBlue | termbox.AttrBold
 			} else if !isValid {
-				digitStyle = termbox.ColorLightRed | termbox.AttrCursive
+				digitStyle = termbox.ColorLightRed | termbox.AttrBold
 			} else {
 				digitStyle = termbox.ColorDefault
 			}
 
 			termbox.SetCell(x, y, character, digitStyle, termbox.ColorDefault)
 
-			if column == 2 || column == 5 {
-				x += 4
-			} else {
-				x += 3
-			}
+			x += 4
 		}
-
 		x = 2
-		if row == 2 || row == 5 {
-			y += 2
-		} else {
-			y++
-		}
+		y += 2
 	}
 
 	if p.board.isSolved() {
@@ -92,20 +130,26 @@ func (p *painter) paintBoard() {
 }
 
 func (p *painter) paintVictory() {
-	const offsetX = 8
-	const offsetY = 5
+	const offsetX = 5
+	const offsetY = 7
 
 	lines := []string{
-		"┌─┴─────────┴─┐",
-		"│   Victory   │",
-		"└─┬─────────┬─┘",
+		"┌────────────────────────┐",
+		"│                        │",
+		"│         Victory        │",
+		"│                        │",
+		"└────────────────────────┘",
 	}
 
 	for y, line := range lines {
 		x := 0
 		for _, character := range line {
-			termbox.SetCell(x+offsetX, y+offsetY, character, termbox.ColorLightGreen, termbox.ColorDefault)
+			termbox.SetCell(x+offsetX, y+offsetY, character, termbox.ColorLightGreen|termbox.AttrBold, termbox.ColorDefault)
 			x++
 		}
 	}
+}
+
+func (p *painter) paintCommands() {
+
 }

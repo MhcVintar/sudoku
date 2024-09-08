@@ -48,6 +48,7 @@ func (g *Game) repaint() {
 
 	g.painter.paintBoard()
 	g.painter.paintCursor()
+	g.painter.paintCommands()
 
 	err = termbox.Flush()
 	if err != nil {
