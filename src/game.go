@@ -1,6 +1,9 @@
 package src
 
-import "github.com/nsf/termbox-go"
+import (
+	"github.com/nsf/termbox-go"
+	"time"
+)
 
 type Difficulty = uint8
 
@@ -13,6 +16,8 @@ const (
 type Game struct {
 	eventHandler *eventHandler
 	painter      *painter
+	board        *board
+	startTime    time.Time
 }
 
 func NewGame(difficulty Difficulty) *Game {
@@ -22,6 +27,8 @@ func NewGame(difficulty Difficulty) *Game {
 	return &Game{
 		eventHandler: newEventHandler(b, c),
 		painter:      newPainter(b, c),
+		board:        b,
+		startTime:    time.Now(),
 	}
 }
 
@@ -48,6 +55,11 @@ func (g *Game) repaint() {
 	g.painter.paintBoard()
 	g.painter.paintCursor()
 	g.painter.paintCommands()
+
+	if g.board.isSolved() {
+		duration := time.Now().Sub(g.startTime)
+		g.painter.paintStats(duration)
+	}
 
 	err = termbox.Flush()
 	if err != nil {

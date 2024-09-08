@@ -1,7 +1,9 @@
 package src
 
 import (
+	"fmt"
 	"github.com/nsf/termbox-go"
+	"time"
 )
 
 type painter struct {
@@ -125,21 +127,20 @@ func (p *painter) paintBoard() {
 		x = 2
 		y += 2
 	}
-
-	if p.board.isSolved() {
-		p.paintVictory()
-	}
 }
 
-func (p *painter) paintVictory() {
+func (p *painter) paintStats(duration time.Duration) {
 	const offsetX = 5
-	const offsetY = 7
+	const offsetY = 5
+
+	hours := int(duration.Hours())
+	minutes := int(duration.Minutes()) % 60
+	seconds := int(duration.Seconds()) % 60
 
 	lines := []string{
 		"┌────────────────────────┐",
-		"│                        │",
 		"│         Victory        │",
-		"│                        │",
+		fmt.Sprintf("│     Time: %02d:%02d:%02d     │", hours, minutes, seconds),
 		"└────────────────────────┘",
 	}
 
