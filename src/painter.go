@@ -130,8 +130,8 @@ func (p *painter) paintBoard() {
 }
 
 func (p *painter) paintStats(duration time.Duration) {
-	const offsetX = 5
-	const offsetY = 5
+	const offsetX = 0
+	const offsetY = 20
 
 	hours := int(duration.Hours())
 	minutes := int(duration.Minutes()) % 60
@@ -155,5 +155,21 @@ func (p *painter) paintStats(duration time.Duration) {
 }
 
 func (p *painter) paintCommands() {
+	const offsetX = 40
+	const offsetY = 1
 
+	lines := []string{
+		"Arrows: move      ",
+		"1-9:    set cell  ",
+		"0:      clear cell",
+		"q:      quit      ",
+	}
+
+	for y, line := range lines {
+		x := 0
+		for _, character := range line {
+			termbox.SetCell(x+offsetX, y+offsetY, character, termbox.ColorDefault|termbox.AttrCursive, termbox.ColorDefault)
+			x++
+		}
+	}
 }

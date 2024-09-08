@@ -32,8 +32,6 @@ func (e *eventHandler) handleKeyEvent(event termbox.Event) (quit bool) {
 		e.cursor.moveLeft()
 	case termbox.KeyArrowRight:
 		e.cursor.moveRight()
-	case termbox.KeyEsc:
-		quit = true
 	}
 
 	switch event.Ch {
