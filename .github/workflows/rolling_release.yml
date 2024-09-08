@@ -28,9 +28,15 @@ jobs:
     - name: Build Binaries
       run: make build
 
+    - name: Delete Existing Release
+      run: |
+        gh release delete rolling-release -y
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Create Release
       id: create_release
-      uses: softprops/action-gh-release@v1
+      uses: actions/create-release@v1.1.0
       with:
         tag_name: rolling-release
         release_name: Rolling Release
