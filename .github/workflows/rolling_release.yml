@@ -34,76 +34,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1.1.0
-        with:
-          tag_name: rolling-release
-          release_name: Rolling Release
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set Release URL
-        run: echo "UPLOAD_URL=${{ steps.create_release.outputs.upload_url }}" >> $GITHUB_ENV
-
-      - name: Upload Release Assets for Darwin amd64
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ./bin/sudoku_darwin_amd64
-          asset_name: sudoku_darwin_amd64
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets for Darwin arm64
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ./bin/sudoku_darwin_arm64
-          asset_name: sudoku_darwin_arm64
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets for Linux amd64
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ./bin/sudoku_linux_amd64
-          asset_name: sudoku_linux_amd64
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets for Linux arm64
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ./bin/sudoku_linux_arm64
-          asset_name: sudoku_linux_arm64
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets for Windows amd64
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ./bin/sudoku_windows_amd64.exe
-          asset_name: sudoku_windows_amd64.exe
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets for Windows arm64
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: ./bin/sudoku_windows_arm64.exe
-          asset_name: sudoku_windows_arm64.exe
-          asset_content_type: application/octet-stream
+      - name: Create Release and Upload Assets
+        run: |
+          release_id=$(gh release create rolling-release ./bin/sudoku_darwin_amd64 ./bin/sudoku_darwin_arm64 ./bin/sudoku_linux_amd64 ./bin/sudoku_linux_arm64 ./bin/sudoku_windows_amd64.exe ./bin/sudoku_windows_arm64.exe --title "Rolling Release" --notes "Automated release.")
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
