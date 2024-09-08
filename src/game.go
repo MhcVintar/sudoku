@@ -20,6 +20,8 @@ type Game struct {
 	startTime    time.Time
 }
 
+var mistakes = 0
+
 func NewGame(difficulty Difficulty) *Game {
 	b := generateBoard(difficulty)
 	c := newCursor()

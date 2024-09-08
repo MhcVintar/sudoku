@@ -146,6 +146,8 @@ func (b *board) setCell(row, column int, value uint8, isGenerated bool) (isValid
 			b.rows[row][value] = true
 			b.columns[column][value] = true
 			b.squares[square][value] = true
+		} else {
+			mistakes++
 		}
 	}
 	return

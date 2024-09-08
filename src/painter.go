@@ -141,6 +141,7 @@ func (p *painter) paintStats(duration time.Duration) {
 		"┌────────────────────────┐",
 		"│         Victory        │",
 		fmt.Sprintf("│     Time: %02d:%02d:%02d     │", hours, minutes, seconds),
+		fmt.Sprintf("│     Mistakes: %-*d      │", 3, mistakes),
 		"└────────────────────────┘",
 	}
 
