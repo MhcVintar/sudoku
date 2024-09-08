@@ -30,7 +30,7 @@ jobs:
 
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1.1.0
+      uses: softprops/action-gh-release@v1
       with:
         tag_name: rolling-release
         release_name: Rolling Release
