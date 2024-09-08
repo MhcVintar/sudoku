@@ -1,4 +1,4 @@
-package src
+package main
 
 type cursor struct {
 	screenX, screenY, boardX, boardY int

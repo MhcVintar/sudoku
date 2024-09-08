@@ -1,5 +1,8 @@
 name: Rolling Release
 
+permissions:
+    contents: write
+
 on:
   push:
     branches:

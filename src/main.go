@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/nsf/termbox-go"
 	"os"
-	"sudoku/src"
 )
 
 func main() {
@@ -13,14 +12,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	var difficulty src.Difficulty
+	var difficulty Difficulty
 	switch os.Args[1] {
 	case "easy":
-		difficulty = src.Easy
+		difficulty = Easy
 	case "medium":
-		difficulty = src.Medium
+		difficulty = Medium
 	case "hard":
-		difficulty = src.Hard
+		difficulty = Hard
 	default:
 		fmt.Println("Usage: sudoku [ easy | medium | hard ]")
 		os.Exit(1)
@@ -31,5 +30,5 @@ func main() {
 	}
 	defer termbox.Close()
 
-	src.NewGame(difficulty).Run()
+	NewGame(difficulty).Run()
 }
