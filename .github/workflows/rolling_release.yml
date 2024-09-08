@@ -28,11 +28,6 @@ jobs:
       - name: Build Binaries
         run: make build
 
-      - name: Delete Existing Release
-        run: |
-          gh release delete rolling-release -y
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release and Upload Assets
         run: |
