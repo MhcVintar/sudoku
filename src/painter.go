@@ -28,7 +28,9 @@ func (p *painter) paintCursor() {
 		digitStyle = termbox.ColorBlack
 	}
 
+	termbox.SetCell(p.cursor.screenX-1, p.cursor.screenY, ' ', digitStyle, termbox.ColorWhite)
 	termbox.SetCell(p.cursor.screenX, p.cursor.screenY, currentCell.Ch, digitStyle, termbox.ColorWhite)
+	termbox.SetCell(p.cursor.screenX+1, p.cursor.screenY, ' ', digitStyle, termbox.ColorWhite)
 }
 
 func (p *painter) paintBoard() {

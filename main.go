@@ -9,7 +9,7 @@ import (
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Println("Usage: sudoku [ easy | medium | hard | expert ]")
+		fmt.Println("Usage: sudoku [ easy | medium | hard ]")
 		os.Exit(1)
 	}
 
@@ -21,10 +21,8 @@ func main() {
 		difficulty = src.Medium
 	case "hard":
 		difficulty = src.Hard
-	case "expert":
-		difficulty = src.Expert
 	default:
-		fmt.Println("Usage: sudoku [ easy | medium | hard | expert ]")
+		fmt.Println("Usage: sudoku [ easy | medium | hard ]")
 		os.Exit(1)
 	}
 

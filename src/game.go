@@ -8,7 +8,6 @@ const (
 	Easy Difficulty = iota
 	Medium
 	Hard
-	Expert
 )
 
 type Game struct {

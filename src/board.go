@@ -38,7 +38,18 @@ func generateBoard(difficulty Difficulty) *board {
 
 	b := initBoard()
 	b.fillBoard(0, 0, random)
-	b.clearCells(difficulty, random)
+
+	var toRemove int
+	switch difficulty {
+	case Easy:
+		toRemove = 36 + random.Intn(6)
+	case Medium:
+		toRemove = 42 + random.Intn(8)
+	case Hard:
+		toRemove = 50 + random.Intn(6)
+	}
+	b.clearCells(toRemove, 0, random.Perm(81))
+
 	return b
 }
 
@@ -65,14 +76,9 @@ func (b *board) fillBoard(row, column int, random *rand.Rand) bool {
 
 		b.setCell(row, column, value, true)
 
-		var newRow, newCol int
-		if column == 8 {
-			newRow, newCol = row+1, 0
-		} else {
-			newRow, newCol = row, column+1
-		}
+		newRow, newColumn := getNewRowAndColumn(row, column)
 
-		ok = b.fillBoard(newRow, newCol, random)
+		ok = b.fillBoard(newRow, newColumn, random)
 		if !ok {
 			available = append(available[:i], available[i+1:]...)
 			b.clearCell(row, column, true)
@@ -81,28 +87,22 @@ func (b *board) fillBoard(row, column int, random *rand.Rand) bool {
 	return true
 }
 
-func (b *board) clearCells(difficulty Difficulty, random *rand.Rand) {
-	randomCells := random.Perm(81)
-
-	var toRemove int
-	switch difficulty {
-	case Easy:
-		toRemove = 36 + random.Intn(6)
-	case Medium:
-		toRemove = 42 + random.Intn(8)
-	case Hard:
-		toRemove = 50 + random.Intn(6)
-	case Expert:
-		toRemove = 56 + random.Intn(9)
+func (b *board) clearCells(toRemove, i int, positions []int) {
+	if toRemove == 0 {
+		return
 	}
 
-	for toRemove > 0 {
-		row := randomCells[toRemove] / 9
-		column := randomCells[toRemove] % 9
+	row := positions[i] / 9
+	column := positions[i] % 9
+	value := b.getCell(row, column).value
 
-		b.clearCell(row, column, true)
+	b.clearCell(row, column, true)
 
-		toRemove--
+	if b.countSolutions(0, 0) != 1 {
+		b.setCell(row, column, value, true)
+		b.clearCells(toRemove, i+1, positions)
+	} else {
+		b.clearCells(toRemove-1, i+1, positions)
 	}
 }
 
@@ -167,6 +167,33 @@ func (b *board) clearCell(row, column int, isGenerated bool) {
 	}
 }
 
+func (b *board) countSolutions(row, column int) (count int) {
+	if row == 9 {
+		return 1
+	} else if b.getCell(row, column).value != 0 {
+		return b.countSolutions(getNewRowAndColumn(row, column))
+	}
+
+	for value := uint8(1); value <= 9; value++ {
+		if b.isValid(row, column, value) {
+			b.setCell(row, column, value, false)
+
+			count += b.countSolutions(getNewRowAndColumn(row, column))
+
+			b.clearCell(row, column, false)
+		}
+	}
+	return
+}
+
 func getSquareFromRowAndColumn(row, column int) int {
 	return (row/3)*3 + column/3
+}
+
+func getNewRowAndColumn(row, column int) (newRow, newColumn int) {
+	newRow, newColumn = row, column+1
+	if newColumn == 9 {
+		newRow, newColumn = row+1, 0
+	}
+	return
 }
