@@ -37,20 +37,12 @@ func (e *eventHandler) handleKeyEvent(event termbox.Event) (quit bool) {
 	}
 
 	switch event.Ch {
-	case 'w':
-		e.cursor.moveUp()
 	case 'k':
 		e.cursor.moveUp()
-	case 's':
-		e.cursor.moveDown()
 	case 'j':
 		e.cursor.moveDown()
-	case 'a':
-		e.cursor.moveLeft()
 	case 'h':
 		e.cursor.moveLeft()
-	case 'd':
-		e.cursor.moveRight()
 	case 'l':
 		e.cursor.moveRight()
 	case 'q':

@@ -22,71 +22,36 @@ func (p *painter) paintCursor() {
 }
 
 func (p *painter) paintBoard() {
-	// Draw top bar
-	termbox.SetCell(0, 0, '┌', termbox.ColorDefault, termbox.ColorDefault)
-	for i := 1; i <= 29; i++ {
-		if i == 10 || i == 20 {
-			termbox.SetCell(i, 0, '┬', termbox.ColorDefault, termbox.ColorDefault)
-		} else {
-			termbox.SetCell(i, 0, '─', termbox.ColorDefault, termbox.ColorDefault)
-		}
+	boardLines := []string{
+		"┌─────────┬─────────┬─────────┐",
+		"│         │         │         │",
+		"│         │         │         │",
+		"│         │         │         │",
+		"├─────────┼─────────┼─────────┤",
+		"│         │         │         │",
+		"│         │         │         │",
+		"│         │         │         │",
+		"├─────────┼─────────┼─────────┤",
+		"│         │         │         │",
+		"│         │         │         │",
+		"│         │         │         │",
+		"└─────────┴─────────┴─────────┘",
 	}
-	termbox.SetCell(30, 0, '┐', termbox.ColorDefault, termbox.ColorDefault)
 
-	// Draw bottom bar
-	termbox.SetCell(0, 12, '└', termbox.ColorDefault, termbox.ColorDefault)
-	for i := 1; i <= 29; i++ {
-		if i == 10 || i == 20 {
-			termbox.SetCell(i, 12, '┴', termbox.ColorDefault, termbox.ColorDefault)
-		} else {
-			termbox.SetCell(i, 12, '─', termbox.ColorDefault, termbox.ColorDefault)
-		}
-	}
-	termbox.SetCell(30, 12, '┘', termbox.ColorDefault, termbox.ColorDefault)
-
-	// Draw left bar
-	for i := 1; i <= 11; i++ {
-		if i == 4 || i == 8 {
-			termbox.SetCell(0, i, '├', termbox.ColorDefault, termbox.ColorDefault)
-		} else {
-			termbox.SetCell(0, i, '│', termbox.ColorDefault, termbox.ColorDefault)
+	for y, line := range boardLines {
+		x := 0
+		for _, character := range line {
+			termbox.SetCell(x, y, character, termbox.ColorDefault, termbox.ColorDefault)
+			x++
 		}
 	}
 
-	// Draw right bar
-	for i := 1; i <= 11; i++ {
-		if i == 4 || i == 8 {
-			termbox.SetCell(30, i, '┤', termbox.ColorDefault, termbox.ColorDefault)
-		} else {
-			termbox.SetCell(30, i, '│', termbox.ColorDefault, termbox.ColorDefault)
-		}
-	}
-
-	// Draw middle 2 horizontal bars
-	for i := 1; i <= 29; i++ {
-		if i == 10 || i == 20 {
-			termbox.SetCell(i, 4, '┼', termbox.ColorDefault, termbox.ColorDefault)
-			termbox.SetCell(i, 8, '┼', termbox.ColorDefault, termbox.ColorDefault)
-		} else {
-			termbox.SetCell(i, 4, '─', termbox.ColorDefault, termbox.ColorDefault)
-			termbox.SetCell(i, 8, '─', termbox.ColorDefault, termbox.ColorDefault)
-		}
-	}
-
-	// Draw middle 2 vertical bars
-	for i := 1; i <= 11; i++ {
-		if i != 4 && i != 8 {
-			termbox.SetCell(10, i, '│', termbox.ColorDefault, termbox.ColorDefault)
-			termbox.SetCell(20, i, '│', termbox.ColorDefault, termbox.ColorDefault)
-		}
-	}
-
-	// Draw digits
 	x, y := 2, 1
 	for row := 0; row < 9; row++ {
 		for column := 0; column < 9; column++ {
-			value := p.board.getValue(row, column)
-			isGenerated := p.board.isGenerated(row, column)
+			value := p.board.getCell(row, column).value
+			isGenerated := p.board.getCell(row, column).isGenerated
+			isValid := p.board.getCell(row, column).isValid
 
 			var character rune
 			if value == 0 {
@@ -98,6 +63,8 @@ func (p *painter) paintBoard() {
 			var digitStyle termbox.Attribute
 			if isGenerated {
 				digitStyle = termbox.ColorLightBlue | termbox.AttrBold
+			} else if !isValid {
+				digitStyle = termbox.ColorLightRed | termbox.AttrCursive
 			} else {
 				digitStyle = termbox.ColorDefault
 			}
@@ -119,49 +86,26 @@ func (p *painter) paintBoard() {
 		}
 	}
 
-	// Draw victory message
 	if p.board.isSolved() {
-		// Draw top bar
-		termbox.SetCell(8, 5, '┌', termbox.ColorLightGreen, termbox.ColorDefault)
-		for i := 9; i <= 21; i++ {
-			if i == 10 || i == 20 {
-				termbox.SetCell(i, 5, '┴', termbox.ColorLightGreen, termbox.ColorDefault)
-			} else {
-				termbox.SetCell(i, 5, '─', termbox.ColorLightGreen, termbox.ColorDefault)
-			}
+		p.paintVictory()
+	}
+}
+
+func (p *painter) paintVictory() {
+	const offsetX = 8
+	const offsetY = 5
+
+	lines := []string{
+		"┌─┴─────────┴─┐",
+		"│   Victory   │",
+		"└─┬─────────┬─┘",
+	}
+
+	for y, line := range lines {
+		x := 0
+		for _, character := range line {
+			termbox.SetCell(x+offsetX, y+offsetY, character, termbox.ColorLightGreen, termbox.ColorDefault)
+			x++
 		}
-		termbox.SetCell(22, 5, '┐', termbox.ColorLightGreen, termbox.ColorDefault)
-
-		// Draw bottom bar
-		termbox.SetCell(8, 7, '└', termbox.ColorLightGreen, termbox.ColorDefault)
-		for i := 9; i <= 21; i++ {
-			if i == 10 || i == 20 {
-				termbox.SetCell(i, 7, '┬', termbox.ColorLightGreen, termbox.ColorDefault)
-			} else {
-				termbox.SetCell(i, 7, '─', termbox.ColorLightGreen, termbox.ColorDefault)
-			}
-		}
-		termbox.SetCell(22, 7, '┘', termbox.ColorLightGreen, termbox.ColorDefault)
-
-		// Draw left bar
-		termbox.SetCell(8, 6, '│', termbox.ColorLightGreen, termbox.ColorDefault)
-
-		// Draw right bar
-		termbox.SetCell(22, 6, '│', termbox.ColorLightGreen, termbox.ColorDefault)
-
-		// Draw text
-		termbox.SetCell(9, 6, ' ', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(10, 6, ' ', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(11, 6, ' ', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(12, 6, 'V', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(13, 6, 'i', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(14, 6, 'c', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(15, 6, 't', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(16, 6, 'o', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(17, 6, 'r', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(18, 6, 'y', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(19, 6, ' ', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(20, 6, ' ', termbox.ColorLightGreen, termbox.ColorDefault)
-		termbox.SetCell(21, 6, ' ', termbox.ColorLightGreen, termbox.ColorDefault)
 	}
 }

@@ -8,6 +8,7 @@ import (
 type cell struct {
 	value       uint8
 	isGenerated bool
+	isValid     bool
 }
 
 type board struct {
@@ -119,35 +120,50 @@ func (b *board) isSolved() bool {
 	return true
 }
 
-func (b *board) getValue(row, column int) uint8 {
-	return b.cells[row][column].value
+func (b *board) getCell(row, column int) cell {
+	return b.cells[row][column]
 }
 
-func (b *board) isGenerated(row, column int) bool {
-	return b.cells[row][column].isGenerated
-}
+func (b *board) setCell(row, column int, value uint8, isGenerated bool) (isValid bool) {
+	if isGenerated {
+		if b.isValid(row, column, value) {
+			isValid = true
+			b.cells[row][column] = cell{value, true, true}
 
-func (b *board) setCell(row, column int, value uint8, isGenerated bool) {
-	if isGenerated || !b.isGenerated(row, column) {
-		b.cells[row][column] = cell{value, isGenerated}
+			square := getSquareFromRowAndColumn(row, column)
+			b.rows[row][value] = true
+			b.columns[column][value] = true
+			b.squares[square][value] = true
+		} else {
+			isValid = false
+		}
+	} else if !b.getCell(row, column).isGenerated {
+		isValid = b.isValid(row, column, value)
+		b.cells[row][column] = cell{value, false, isValid}
 
-		square := getSquareFromRowAndColumn(row, column)
-		b.rows[row][value] = true
-		b.columns[column][value] = true
-		b.squares[square][value] = true
+		if isValid {
+			square := getSquareFromRowAndColumn(row, column)
+			b.rows[row][value] = true
+			b.columns[column][value] = true
+			b.squares[square][value] = true
+		}
 	}
+	return
 }
 
 func (b *board) clearCell(row, column int, isGenerated bool) {
-	if isGenerated || !b.isGenerated(row, column) {
-		value := b.getValue(row, column)
+	if isGenerated || !b.getCell(row, column).isGenerated {
+		value := b.getCell(row, column).value
+		isValid := b.getCell(row, column).isValid
 
 		b.cells[row][column] = cell{}
 
-		square := getSquareFromRowAndColumn(row, column)
-		delete(b.rows[row], value)
-		delete(b.columns[column], value)
-		delete(b.squares[square], value)
+		if isValid {
+			square := getSquareFromRowAndColumn(row, column)
+			delete(b.rows[row], value)
+			delete(b.columns[column], value)
+			delete(b.squares[square], value)
+		}
 	}
 }
 
