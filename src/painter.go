@@ -140,6 +140,7 @@ func (p *painter) paintStats(duration time.Duration) {
 	lines := []string{
 		"┌───────────────────────┐",
 		"│        Victory        │",
+		"│                       │",
 		fmt.Sprintf("│ Time: %02d:%02d:%02d        │", hours, minutes, seconds),
 		fmt.Sprintf("│ Mistakes: %-*d         │", 3, mistakes),
 		"└───────────────────────┘",
@@ -149,7 +150,7 @@ func (p *painter) paintStats(duration time.Duration) {
 		x := 0
 		for _, character := range line {
 			var characterStyle termbox.Attribute
-			if (y == 2 || y == 3) && character != '│' {
+			if (y == 3 || y == 4) && character != '│' {
 				characterStyle = termbox.ColorDefault
 			} else {
 				characterStyle = termbox.ColorLightGreen | termbox.AttrBold
