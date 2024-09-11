@@ -51,22 +51,31 @@ func (e *eventHandler) handleKeyEvent(event termbox.Event) (quit bool) {
 	case '0':
 		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 	case '1':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 1, false)
 	case '2':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 2, false)
 	case '3':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 3, false)
 	case '4':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 4, false)
 	case '5':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 5, false)
 	case '6':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 6, false)
 	case '7':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 7, false)
 	case '8':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 8, false)
 	case '9':
+		e.board.clearCell(e.cursor.boardY, e.cursor.boardX, false)
 		e.board.setCell(e.cursor.boardY, e.cursor.boardX, 9, false)
 	}
 
