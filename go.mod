@@ -1,4 +1,4 @@
-module sudoku
+module github.com/MhcVintar/sudoku
 
 go 1.22.2
 
