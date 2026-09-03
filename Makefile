@@ -1,5 +1,5 @@
 APP_NAME := sudoku
-SRC_DIR := ./src
+SRC_DIR := ./cmd/sudoku
 
 build:
 	GOOS=darwin GOARCH=amd64 go build -o bin/$(APP_NAME)_darwin_amd64 $(SRC_DIR)

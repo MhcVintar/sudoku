@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/MhcVintar/sudoku/internal/game"
 	"github.com/nsf/termbox-go"
 	"os"
 )
@@ -12,14 +13,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	var difficulty Difficulty
+	var difficulty game.Difficulty
 	switch os.Args[1] {
 	case "easy":
-		difficulty = Easy
+		difficulty = game.Easy
 	case "medium":
-		difficulty = Medium
+		difficulty = game.Medium
 	case "hard":
-		difficulty = Hard
+		difficulty = game.Hard
 	default:
 		fmt.Println("Usage: sudoku [ easy | medium | hard ]")
 		os.Exit(1)
@@ -30,5 +31,5 @@ func main() {
 	}
 	defer termbox.Close()
 
-	NewGame(difficulty).Run()
+	game.NewGame(difficulty).Run()
 }

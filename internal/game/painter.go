@@ -1,9 +1,10 @@
-package main
+package game
 
 import (
 	"fmt"
-	"github.com/nsf/termbox-go"
 	"time"
+
+	"github.com/nsf/termbox-go"
 )
 
 type painter struct {
@@ -68,7 +69,7 @@ func (p *painter) paintBoard() {
 	boardRegularLines := []string{
 		".....................................",
 		".   │   │   .   │   │   .   │   │   .",
-		".───┼───┼───.───│───│───.───│───│───.",
+		".───┼───┼───.───┼───┼───.───┼───┼───.",
 		".   │   │   .   │   │   .   │   │   .",
 		".───┼───┼───.───┼───┼───.───┼───┼───.",
 		".   │   │   .   │   │   .   │   │   .",
